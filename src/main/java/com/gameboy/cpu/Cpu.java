@@ -1,5 +1,7 @@
 package com.gameboy.cpu;
 
+import com.gameboy.memory.MemoryBus;
+
 /**
  * This is the CPU functionality and operations
  * @author Mitchell Schaeffer 
@@ -10,6 +12,10 @@ public class Cpu {
 
     //reference to registers / variable we fill using constructor 
     private Registers registers;
+    //Program counter 
+    public int pc;
+    //Memory bus class
+    MemoryBus memory = new MemoryBus();
 
     //
 
@@ -17,8 +23,10 @@ public class Cpu {
      * This is the constructor for CPU
      * @param registers
      */
-    public Cpu(Registers registers) {
+    public Cpu(Registers registers, MemoryBus bus) {
         this.registers = registers;
+        this.memory = bus;
+        this.pc = 0x0000;
     }
     /**
      * Takes in a register target and returns the value of 
@@ -56,6 +64,10 @@ public class Cpu {
             default -> throw new IllegalArgumentException("There was an error setting the" +
                 "value of register" + target);
         }
+    }
+    
+    public void step() {
+        
     }
     
     public void execute(Instruction instruction) {
@@ -577,8 +589,7 @@ public class Cpu {
     public void push(RegisterPair reg) {
         
         switch(reg) {
-            case (AF):
-                
+            case AF: 
                 break;
         }
     }
@@ -635,7 +646,8 @@ public class Cpu {
 
     public static void main(String[] args) {
         Registers regs = new Registers();
-        Cpu cpu = new Cpu(regs);
+        MemoryBus memory = new MemoryBus();
+        Cpu cpu = new Cpu(regs, memory);
         
         
         regs.a = 0x02;
