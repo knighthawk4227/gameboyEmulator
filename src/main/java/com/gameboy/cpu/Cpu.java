@@ -1,6 +1,7 @@
 package com.gameboy.cpu;
 
 import com.gameboy.memory.MemoryBus;
+import com.gameboy.memory.Memory;
 
 /**
  * This is the CPU functionality and operations
@@ -12,10 +13,13 @@ public class Cpu {
 
     //reference to registers / variable we fill using constructor 
     private Registers registers;
+    //Assigning the variable to this so we can determine when to use this
     //Program counter 
     public int pc;
     //Memory bus class
     MemoryBus memory = new MemoryBus();
+    //Memory functions
+    Memory mem = new Memory();
 
     //
 
@@ -66,9 +70,13 @@ public class Cpu {
         }
     }
     
-    public void step() {
-        
-    }
+    // public void step() {    
+    //     //read current memory at program counter pos
+    //     int instruction = mem.read_byte(pc);
+         
+    //     //convert the byte into some instruction 
+    //     Instruction instruction = new Instruction();
+    // }
     
     public void execute(Instruction instruction) {
         //get type of thing we doing (e.g ADD, SUB)
@@ -90,7 +98,13 @@ public class Cpu {
             and(value);
         } else if (type == InstructionType.XOR) {
             xor(value);
-        } else if (type == InstructionType.NOP) {
+        } else if(type == InstructionType.LD) {
+            ld(target, value); 
+        }else if(type == InstructionType.JP){
+            return;
+            //write the jp function.
+        }
+         else if (type == InstructionType.NOP) {
             return;
         }
 
