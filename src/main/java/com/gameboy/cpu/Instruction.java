@@ -19,6 +19,22 @@ public class Instruction {
     
 
     /**
+     * This function checks the memory address then determines
+     * if that address needs an immediate value returns true. I don't fully understand
+     * this yet but I am trying and following along
+     * @param opcode
+     * @return true if it is a mem address that needs immediate
+     * or false if it is not
+     */
+    public boolean needsImmediate(int opcode) {
+        switch (opcode) {
+            case -> 0x3E, 0x06, 0x0E, 0x1E, 0x16, 0x26, 0x2E,
+            0xC6, 0xCE, 
+        }
+    }
+
+
+    /**
      * This is to check immediate value since sometimes we need 
      * to use a value that is being given or returned to us 
      * and in this case we sob and we use this function
@@ -34,8 +50,8 @@ public class Instruction {
      * @param immediate
      * @return immediate value variable.
      */
-    public int getImmediateValue(int immediate) {
-        return immediate;
+    public int getImmediateValue() {
+        return this.immediate;
     }
     
 

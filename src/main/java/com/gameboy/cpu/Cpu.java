@@ -5,6 +5,8 @@ import com.gameboy.memory.Memory;
 
 /**
  * This is the CPU functionality and operations
+ * I left this for a couple months and was lost august 11 2025
+ * trying to pick up where I left off just a little lost
  * @author Mitchell Schaeffer 
  * @version 1.0
  */
@@ -70,13 +72,25 @@ public class Cpu {
         }
     }
     
-    // public void step() {    
-    //     //read current memory at program counter pos
-    //     int instruction = mem.read_byte(pc);
-         
-    //     //convert the byte into some instruction 
-    //     Instruction instruction = new Instruction();
-    // }
+    public void step() {    
+        //read current memory at program counter position
+        int opcode = mem.read_byte(pc);        
+        
+        int immediate = -1;
+        
+        if (opcode == 0x3E) {
+            immediate = mem.read_byte(pc + 1);
+        }
+
+        //convert the byte into some instruction 
+        // You need to provide the second int argument as required by fromByte(int, int)
+        // take in the current address then the immediate value if needed
+        Instruction instruct = Instruction.fromByte(opcode, immediate);
+        execute(instruct);
+        
+        //increase pc based on if there is an immediate or not
+        pc += instruct.hasImmediate() ? 2 : 1;
+    }
     
     public void execute(Instruction instruction) {
         //get type of thing we doing (e.g ADD, SUB)
@@ -86,28 +100,26 @@ public class Cpu {
         int value = getRegisterValue(target);  
         
         //Might fuck around and make this a switch later 
-        if (type == InstructionType.ADD) {
-            //function only adds one register to another as of right now
-            add(value);
-        } else if (type == InstructionType.SUB) {
-            sub(value);
-            
-        } else if (type == InstructionType.OR) {
-            or(value);
-        } else if (type == InstructionType.AND) {
-            and(value);
-        } else if (type == InstructionType.XOR) {
-            xor(value);
-        } else if(type == InstructionType.LD) {
-            ld(target, value); 
-        }else if(type == InstructionType.JP){
-            return;
-            //write the jp function.
+        //For what the functions do look at the functions themselves
+        //but this essentially takes the instruction in a switch with type
+        // then boom does that instruction. like add value add value to the 
+        // A register I think I forgot but one of the registers does all the 
+        //addition anyways thanks for coming to the ted talk.
+        switch (type) {
+            case ADD -> add(value);
+            case SUB -> sub(value);
+            case OR -> or(value);
+            case AND -> and(value);
+            case XOR -> xor(value);
+            case LD -> {
+                if (instruction.hasImmediate()) {
+                    ld(target, instruction.getImmediateValue());
+                } else {
+                    ld(target, value);
+                }
+            }            //write the JP function for this.
+            case NOP -> {} //THis means do nothing
         }
-         else if (type == InstructionType.NOP) {
-            return;
-        }
-
     }                 
     
     /* read current value from target register  **check** 
